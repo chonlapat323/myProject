@@ -1,0 +1,28 @@
+// prisma/schema.prisma
+// นิยามโครงสร้าง Database ด้วย Prisma Schema Language
+
+// กำหนด generator — สร้าง Prisma Client สำหรับ TypeScript
+generator client {
+  provider = "prisma-client-js"
+}
+
+// กำหนด datasource — เชื่อมต่อ PostgreSQL
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")   // อ่านจากไฟล์ .env
+}
+
+// =============================
+// Model Product — ตาราง products
+// =============================
+model Product {
+  id          Int      @id @default(autoincrement())  // Primary Key, auto increment
+  name        String                                   // ชื่อสินค้า (required)
+  description String?                                  // คำอธิบาย (optional)
+  price       Float                                    // ราคา
+  stock       Int      @default(0)                    // จำนวนในสต็อก
+  createdAt   DateTime @default(now())                // วันที่สร้าง (auto)
+  updatedAt   DateTime @updatedAt                     // วันที่แก้ไขล่าสุด (auto)
+
+  @@map("products")  // ชื่อตารางใน Database
+}

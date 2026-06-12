@@ -1,0 +1,55 @@
+# docker-compose.yml
+# รัน PostgreSQL + pgAdmin ด้วย Docker
+# คำสั่ง: docker compose up -d
+
+version: '3.8'
+
+services:
+  # =============================
+  # PostgreSQL — ฐานข้อมูลหลัก
+  # =============================
+  postgres:
+    image: postgres:16-alpine          # ใช้ Alpine เพื่อขนาดเล็ก
+    container_name: fullstack_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres          # ชื่อ user
+      POSTGRES_PASSWORD: postgres      # รหัสผ่าน
+      POSTGRES_DB: fullstack_db        # ชื่อ database
+    ports:
+      - "5432:5432"                    # host:container
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # เก็บข้อมูลถาวร
+    networks:
+      - fullstack_network
+
+  # =============================
+  # pgAdmin — UI จัดการ Database
+  # เปิด http://localhost:5050
+  # =============================
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: fullstack_pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com   # email login
+      PGADMIN_DEFAULT_PASSWORD: admin          # รหัสผ่าน
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - fullstack_network
+
+# =============================
+# Named volumes — เก็บข้อมูลถาวร
+# =============================
+volumes:
+  postgres_data:
+
+# =============================
+# Network — ให้ services คุยกันได้
+# =============================
+networks:
+  fullstack_network:
+    driver: bridge

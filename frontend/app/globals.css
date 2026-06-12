@@ -1,0 +1,4 @@
+/* globals.css — import Tailwind CSS base styles */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
