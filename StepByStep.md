@@ -789,12 +789,16 @@ export default function HomePage() {
 > **lib/api.ts** = รวมฟังก์ชัน fetch ทั้งหมดไว้ที่เดียว
 > ทุกหน้าที่ต้องการคุยกับ Backend จะ import จากที่นี่ — แก้ที่เดียวทั้งแอปเปลี่ยน
 
-```bash
-# Windows
+```powershell
+# Windows (PowerShell)
 mkdir lib
+New-Item lib\api.ts
+```
 
+```bash
 # macOS / Linux
 mkdir -p lib
+touch lib/api.ts
 ```
 
 **`lib/api.ts`**
@@ -856,12 +860,17 @@ export const deleteProduct = (id: number) =>
 
 ### 8.5 สร้าง Components
 
-```bash
-# Windows
+```powershell
+# Windows (PowerShell)
 mkdir components
+New-Item components\Navbar.tsx
+New-Item components\ProductCard.tsx
+```
 
+```bash
 # macOS / Linux
 mkdir -p components
+touch components/Navbar.tsx components/ProductCard.tsx
 ```
 
 **`components/Navbar.tsx`** — Server Component (ไม่มี onClick)
@@ -965,20 +974,30 @@ export default function ProductCard({ product, onDelete }: Props) {
 
 ### 8.6 สร้างหน้า Products
 
-สร้างโฟลเดอร์ตามโครงสร้าง:
+> **Next.js ไม่มี CLI สำหรับ generate หน้า** — ต้องสร้างไฟล์เองทั้งหมด
+> ใช้คำสั่งด้านล่างเพื่อสร้างโฟลเดอร์และไฟล์ทีเดียวครบ
 
-```bash
-# Windows
+```powershell
+# Windows (PowerShell) — สร้างโฟลเดอร์และไฟล์ทั้งหมดในคำสั่งเดียว
 mkdir app\products
 mkdir app\products\new
-mkdir app\products\[id]
-mkdir app\products\[id]\edit
-
-# macOS / Linux
-mkdir -p app/products/new app/products/\[id\]/edit
+mkdir "app\products\[id]"
+mkdir "app\products\[id]\edit"
+New-Item app\products\page.tsx
+New-Item app\products\new\page.tsx
+New-Item "app\products\[id]\edit\page.tsx"
 ```
 
-> **`[id]`** ในชื่อโฟลเดอร์ = dynamic route — Next.js จะจับค่าจาก URL เช่น `/products/5/edit` → `id = 5`
+```bash
+# macOS / Linux
+mkdir -p app/products/new app/products/\[id\]/edit
+touch app/products/page.tsx
+touch app/products/new/page.tsx
+touch app/products/\[id\]/edit/page.tsx
+```
+
+> **`[id]`** ในชื่อโฟลเดอร์ = dynamic route — Next.js จับค่าจาก URL เช่น `/products/5/edit` → `id = 5`
+> บน Windows ต้องใส่ `"..."` ครอบชื่อโฟลเดอร์ที่มี `[` `]` เพราะ PowerShell ตีความเป็น wildcard
 
 ---
 
