@@ -166,10 +166,12 @@ npm install @nestjs/config @prisma/client prisma class-validator class-transform
 
 ### 3.4 ลบไฟล์ตัวอย่างที่ NestJS สร้างให้ (ไม่ใช้)
 
-```bash
-# Windows
-del src\app.controller.ts src\app.controller.spec.ts src\app.service.ts
+```powershell
+# Windows (PowerShell) — คั่นด้วย , ไม่ใช่ space
+del src\app.controller.ts, src\app.controller.spec.ts, src\app.service.ts
+```
 
+```bash
 # macOS / Linux
 rm src/app.controller.ts src/app.controller.spec.ts src/app.service.ts
 ```
@@ -666,10 +668,12 @@ NEXT_PUBLIC_API_URL=http://localhost:3001/api
 
 ### 7.2 ลบไฟล์ตัวอย่างที่ Next.js สร้างให้
 
-```bash
-# Windows
-del app\page.tsx app\globals.css
+```powershell
+# Windows (PowerShell) — คั่นด้วย , ไม่ใช่ space
+del app\page.tsx, app\globals.css
+```
 
+```bash
 # macOS / Linux
 rm app/page.tsx app/globals.css
 ```
