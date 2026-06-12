@@ -272,7 +272,30 @@ npx prisma generate
 > ```
 > Controller รับ request, Service คิด logic, Prisma คุย DB — แต่ละชั้นรู้หน้าที่ตัวเองเท่านั้น
 
-### 5.1 แก้ไข `src/app.module.ts`
+### 5.1 สร้าง Products และ Prisma Module ด้วย CLI ก่อน
+
+> **ทำขั้นตอนนี้ก่อนแก้ไขไฟล์ใดๆ** — เพราะ `nest generate` จะ auto-import Module เข้า AppModule ให้อัตโนมัติ
+> ถ้าแก้ไขไฟล์ก่อนแล้วค่อย generate จะเกิด duplicate import error
+
+```bash
+nest generate module prisma
+nest generate service prisma --no-spec
+nest generate module products
+nest generate controller products --no-spec
+nest generate service products --no-spec
+```
+
+> **หมายเหตุ Prisma 5:** ถ้ามีไฟล์ `prisma.config.ts` เกิดขึ้นที่ root ของ backend ให้ลบออก — เป็นไฟล์ของ Prisma 7+ ที่ไม่ได้ใช้
+> ```powershell
+> # Windows
+> del prisma.config.ts
+> ```
+
+---
+
+### 5.2 แก้ไข `src/app.module.ts`
+
+> **สำคัญ:** `nest generate` เพิ่ม import ให้อัตโนมัติแล้ว — แทนที่ทั้งไฟล์ด้วย code ด้านล่างนี้เลย (ไม่ต้องกังวลว่าจะซ้ำ)
 
 ```typescript
 import { Module } from '@nestjs/common';
@@ -331,23 +354,15 @@ async function bootstrap() {
 bootstrap();
 ```
 
-### 5.3 สร้าง PrismaModule และ PrismaService
+### 5.3 แทนที่เนื้อหา PrismaModule และ PrismaService
+
+> CLI สร้างไฟล์ให้แล้วในขั้นตอน 5.1 — แทนที่เนื้อหาด้วย code ด้านล่าง
 
 > **ทำไมต้องมีสองไฟล์นี้:**
 > - `PrismaService` = ตัวเชื่อมต่อ Database (ช่างประปา)
 > - `PrismaModule` = ประกาศและแจกจ่าย PrismaService ให้ Module อื่นใช้ได้ (บริษัทประปา)
 >
 > ถ้าไม่มีสองไฟล์นี้ ProductsService จะไม่มี `this.prisma` ใช้ และแอปจะ crash ทันที
-
-สร้างไฟล์ด้วย NestJS CLI (ทุก OS ใช้เหมือนกัน):
-
-```bash
-nest generate module prisma
-nest generate service prisma --no-spec
-```
-
-> CLI จะสร้าง `src/prisma/prisma.module.ts` และ `src/prisma/prisma.service.ts` ให้อัตโนมัติ
-> และ import PrismaModule เข้า AppModule ให้ด้วย — **แต่เราจะแทนที่เนื้อหาด้วย code ด้านล่าง**
 
 **`src/prisma/prisma.module.ts`**
 
@@ -390,19 +405,7 @@ export class PrismaService
 }
 ```
 
-### 5.4 สร้าง Products Module ด้วย CLI
-
-```bash
-nest generate module products
-nest generate controller products --no-spec
-nest generate service products --no-spec
-```
-
-> CLI สร้างไฟล์ให้ครบและ **เชื่อมโยงให้อัตโนมัติ** — import ProductsModule เข้า AppModule,
-> และลงทะเบียน Controller + Service ใน ProductsModule ให้เลย
-> `--no-spec` = ไม่สร้างไฟล์ test
-
-### 5.5 สร้าง DTO (Data Transfer Object)
+### 5.4 สร้าง DTO (Data Transfer Object)
 
 > **DTO คืออะไร:** กรอบที่บอกว่า "ข้อมูลที่รับเข้ามาต้องมีหน้าตาแบบนี้"
 > ทำงานร่วมกับ `ValidationPipe` ใน main.ts — ถ้าข้อมูลไม่ตรง จะ reject อัตโนมัติ 400 Bad Request
@@ -472,7 +475,7 @@ export class UpdateProductDto {
 }
 ```
 
-### 5.6 แทนที่ `src/products/products.service.ts`
+### 5.5 แทนที่ `src/products/products.service.ts`
 
 > **Service** คือหัวใจของ feature — มี logic ทั้งหมด ไม่รู้เรื่อง HTTP
 > รับข้อมูลจาก Controller แล้วคุยกับ Database ผ่าน Prisma
@@ -530,7 +533,7 @@ export class ProductsService {
 }
 ```
 
-### 5.7 แทนที่ `src/products/products.controller.ts`
+### 5.6 แทนที่ `src/products/products.controller.ts`
 
 > **Controller** คือด่านหน้า — รับ HTTP request, ดึงข้อมูลจาก URL/Body, ส่งต่อให้ Service
 > ไม่มี logic ของตัวเอง รู้แค่ "รับอะไร ส่งต่อไปไหน"
@@ -587,7 +590,7 @@ export class ProductsController {
 }
 ```
 
-### 5.8 แทนที่ `src/products/products.module.ts`
+### 5.7 แทนที่ `src/products/products.module.ts`
 
 ```typescript
 import { Module } from '@nestjs/common';
@@ -603,7 +606,7 @@ import { ProductsService } from './products.service';
 export class ProductsModule {}
 ```
 
-### 5.9 ทดสอบรัน Backend
+### 5.8 ทดสอบรัน Backend
 
 ```bash
 npm run start:dev
