@@ -339,15 +339,15 @@ bootstrap();
 >
 > ถ้าไม่มีสองไฟล์นี้ ProductsService จะไม่มี `this.prisma` ใช้ และแอปจะ crash ทันที
 
-สร้างโฟลเดอร์และไฟล์:
+สร้างไฟล์ด้วย NestJS CLI (ทุก OS ใช้เหมือนกัน):
 
 ```bash
-# Windows
-mkdir src\prisma
-
-# macOS / Linux
-mkdir -p src/prisma
+nest generate module prisma
+nest generate service prisma --no-spec
 ```
+
+> CLI จะสร้าง `src/prisma/prisma.module.ts` และ `src/prisma/prisma.service.ts` ให้อัตโนมัติ
+> และ import PrismaModule เข้า AppModule ให้ด้วย — **แต่เราจะแทนที่เนื้อหาด้วย code ด้านล่าง**
 
 **`src/prisma/prisma.module.ts`**
 
@@ -407,12 +407,18 @@ nest generate service products --no-spec
 > **DTO คืออะไร:** กรอบที่บอกว่า "ข้อมูลที่รับเข้ามาต้องมีหน้าตาแบบนี้"
 > ทำงานร่วมกับ `ValidationPipe` ใน main.ts — ถ้าข้อมูลไม่ตรง จะ reject อัตโนมัติ 400 Bad Request
 
-```bash
-# Windows
+```powershell
+# Windows (PowerShell)
 mkdir src\products\dto
+New-Item src\products\dto\create-product.dto.ts
+New-Item src\products\dto\update-product.dto.ts
+```
 
+```bash
 # macOS / Linux
 mkdir -p src/products/dto
+touch src/products/dto/create-product.dto.ts
+touch src/products/dto/update-product.dto.ts
 ```
 
 **`src/products/dto/create-product.dto.ts`**
