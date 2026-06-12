@@ -153,8 +153,11 @@ nest new backend --skip-git
 
 ```bash
 cd backend
-npm install @nestjs/config @prisma/client prisma class-validator class-transformer
+npm install @nestjs/config @prisma/client@5 prisma@5 class-validator class-transformer
 ```
+
+> **หมายเหตุ:** ต้องระบุ `@5` เพื่อ pin เวอร์ชัน Prisma 5 ไว้
+> Prisma 6+ และ 7+ มี breaking change — ไม่รองรับ `url = env(...)` ใน schema.prisma แบบนี้อีกต่อไป
 
 | Package | หน้าที่ |
 |---|---|
